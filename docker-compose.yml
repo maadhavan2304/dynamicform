@@ -1,0 +1,21 @@
+# Dev dependencies only: MySQL 8.0 + Redis (Celery broker). Run the API and UI locally.
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: formbuilder
+      MYSQL_USER: formuser
+      MYSQL_PASSWORD: formpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports: ["3306:3306"]
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes: [mysql_data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpass"]
+      interval: 5s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+volumes:
+  mysql_data:
